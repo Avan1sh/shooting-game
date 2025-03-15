@@ -14,9 +14,43 @@ namespace InfimaGames.LowPolyShooterPack
 	[RequireComponent(typeof(CharacterKinematics))]
 	public sealed class Character : CharacterBehaviour
 	{
-		#region FIELDS SERIALIZED
+        #region FIELDS SERIALIZED
 
-		[Header("Inventory")]
+        // Add this inside the Character class
+
+        [Header("Player Health")]
+        [SerializeField]
+        private float maxHealth = 100f;
+        private float currentHealth;
+
+        public void TakeDamage(float damage)
+        {
+            currentHealth -= damage;
+            Debug.Log("Player took damage! Current Health: " + currentHealth);
+
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
+        }
+
+        private void Die()
+        {
+            Debug.Log("Player is dead!");
+            // Add any death-related behavior here (e.g., respawning, game over screen, disabling movement, etc.)
+        }
+
+        // Example of taking damage from zombies
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Zombie")) // Ensure zombies have the "Zombie" tag
+            {
+                TakeDamage(10f); // Example damage value
+            }
+        }
+
+
+        [Header("Inventory")]
 		
 		[Tooltip("Inventory.")]
 		[SerializeField]
@@ -169,10 +203,11 @@ namespace InfimaGames.LowPolyShooterPack
 
 		protected override void Awake()
 		{
-			#region Lock Cursor
-
-			//Always make sure that our cursor is locked when the game starts!
-			cursorLocked = true;
+            #region Lock Cursor
+            base.Awake();
+            currentHealth = maxHealth;
+            //Always make sure that our cursor is locked when the game starts!
+            cursorLocked = true;
 			//Update the cursor's state.
 			UpdateCursorState();
 
@@ -469,6 +504,8 @@ namespace InfimaGames.LowPolyShooterPack
 		/// Returns true if the Character can change their Weapon.
 		/// </summary>
 		/// <returns></returns>
+		
+
 		private bool CanChangeWeapon()
 		{
 			//Block.

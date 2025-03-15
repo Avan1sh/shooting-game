@@ -1,4 +1,4 @@
-﻿// Copyright 2021, Infima Games. All Rights Reserved.
+﻿/// Copyright 2021, Infima Games. All Rights Reserved.
 
 using System.Linq;
 using UnityEngine;
